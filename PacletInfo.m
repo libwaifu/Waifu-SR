@@ -5,7 +5,7 @@ Paclet[
 		{
 			"Kernel",
 			"Root" -> ".",
-			"Context" -> {"WaifuSR`"}
+			"Context" -> {"Waifu`"}
 		}
 	}
 ]

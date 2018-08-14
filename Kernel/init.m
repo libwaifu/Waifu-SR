@@ -5,4 +5,4 @@ If[$CharacterEncoding =!= "UTF-8",
 	WriteString[st, "$CharacterEncoding=\"UTF-8\";"];
 	Close[st];
 ];
-Get["WaifuSR`WaifuSR`"];
+Get["WaifuSR`WaifuSRLoader`"];
