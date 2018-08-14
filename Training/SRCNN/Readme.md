@@ -1,9 +1,6 @@
-
-
-
 ## SRCNN
 
-```
+```Mathematica
 net = NetChain[{
 	ResizeLayer[{Scaled[2], Scaled[2]}]
 	ConvolutionLayer[32, {3, 3}], ElementwiseLayer[Ramp],
@@ -15,12 +12,13 @@ net = NetChain[{
 ] // NetInitialize
 ```
 
+![SRCNN](https://i.loli.net/2018/08/14/5b729c4034283.png)
 
-## VGG-SR
+## VGG-SR-7
 
 SRCNN 的变种, Waifu2X 作者所选择的网络
 
-```
+```Mathematica
 leakyReLU[alpha_] := ElementwiseLayer[Ramp[#] - alpha * Ramp[-#]&]
 chain = NetChain[{
 	ResizeLayer[{256 + 14, 256 + 14}],
@@ -35,4 +33,6 @@ chain = NetChain[{
 	"Input" -> NetEncoder[{"Image", 32}],
 	"Output" -> NetDecoder["Image"]
 ] // NetInitialize
-``
+```
+
+![VGG-SR-7](https://i.loli.net/2018/08/14/5b729c403f339.png)
