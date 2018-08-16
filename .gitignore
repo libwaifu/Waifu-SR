@@ -20,5 +20,4 @@ docs/.vuepress/public/
 *.zip
 *.wxf
 *.wlnet
-*.wmlf
 *.onnx
