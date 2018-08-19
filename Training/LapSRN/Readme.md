@@ -5,11 +5,11 @@
 ```Mathematica
 leakyReLU[alpha_] := ElementwiseLayer[Ramp[#] - alpha * Ramp[-#]&]
 GetConvolution[i_] := {
-	("convo_" <> ToString[i]) -> ConvolutionLayer[64, 3, "PaddingSize" -> {1, 1}, "Biases" -> None],
-	("leaky_" <> ToString[i]) -> leakyReLU[0.2]
+	("convo_" <> i) -> ConvolutionLayer[64, 3, "PaddingSize" -> {1, 1}, "Biases" -> None],
+	("leaky_" <> i) -> leakyReLU[0.2]
 };
 mainCNN = NetChain[{
-	Table[GetConvolution[i], {i, 0, 10}],
+	Table[GetConvolution[ToString@i], {i, 0, 10}],
 	"decon_11" -> DeconvolutionLayer[64, 4, "Biases" -> None, "PaddingSize" -> {1, 1}],
 	"leaky_11" -> leakyReLU[0.2],
 	"convo_12" -> ConvolutionLayer[1, 3, "Biases" -> None, "PaddingSize" -> {1, 1}]
