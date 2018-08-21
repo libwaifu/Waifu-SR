@@ -53,7 +53,6 @@ WaifuLapSRN[img_, zoom_ : 2, device_ : "GPU"] := Block[
 	netResize = NetReplacePart[LapSRN, {
 		"Input" -> NetEncoder[{"Image", ImageDimensions@upsample - 1, ColorSpace -> "Grayscale"}]
 	}];
-	Echo[netResize];
 	adjust = ColorCombine[{#1 + Image@netResize[#1, TargetDevice -> device], #2, #3}]&;
 	ImageApply[rgbMatrixT.# + {-0.874, 0.532, -1.086}&, adjust @@ ColorSeparate[ycbcr]]
 ];
