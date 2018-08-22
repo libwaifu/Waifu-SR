@@ -86,7 +86,8 @@ WaifuVDSR[img_, zoom_ : 2, device_ : "GPU"] := Block[
 (*VGGSR*)
 VGGSR = Import@FileNameJoin[{$models, "Waifu-VGGSR.WMLF"}]
 WaifuVGGSR[img_, device_ : "GPU"] := Module[
-	{covImg, covNet},
+	{covImg, covNet, x, y},
+	{x, y} = ImageDimensions[img];
 	covImg = ColorCombine[Reverse@ColorSeparate[ImageResize[img, {x + 14, y + 14}]]];
 	covNet = NetReplacePart[VGGSR, "Input" -> NetEncoder[{"Image", ImageDimensions@covImg}]];
 	covNet[covImg, TargetDevice -> device]

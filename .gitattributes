@@ -1,3 +1,4 @@
 *.nb filter=lfs diff=lfs merge=lfs -text
 *.jpg filter=lfs diff=lfs merge=lfs -text
+*.csv filter=lfs diff=lfs merge=lfs -text
 *.wmlf filter=lfs diff=lfs merge=lfs -text
