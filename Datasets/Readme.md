@@ -32,4 +32,4 @@ All the pictures which appears in Pixiv monthly Top40
 
 ### Testing Set
 
-The most largest 100 images
+尺寸大, 细节多, 无黑框, 无分镜头

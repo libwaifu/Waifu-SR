@@ -17,8 +17,8 @@ Export["Pixiv2017.csv", Select[fmt, StringTake[#[[3]], 4] === "2017" &], "TableH
 (*下载作品*)
 timeLeft[start_, frac_] := With[{past = AbsoluteTime[] - start}, If[frac == 0 || past < 1, "-", Floor[past / frac - past]]];
 AbortableMap[func_, list_, ker_ : $KernelCount] := DynamicModule[
-	{len, bag, size, lastresults, starttime, n, results, t},
-	len = Length[list]; size = 0; starttime = AbsoluteTime[];
+	{len, bag, size, lastResults, startTime, n, results, t},
+	len = Length[list]; size = 0; startTime = AbsoluteTime[];
 	results = {}; SetSharedVariable[results, size];
 	Monitor[
 		t = Table[ParallelSubmit[{i},
@@ -36,7 +36,7 @@ AbortableMap[func_, list_, ker_ : $KernelCount] := DynamicModule[
 				Grid[{{"Tasks", "Memory (kB)", "Time left (s)"},
 					{StringForm["``/``", Length[results], len],
 						ToString @ NumberForm[size / 2.^10, {3, 2}],
-						ToString @ timeLeft[starttime, Length[results] / len]}
+						ToString @ timeLeft[startTime, Length[results] / len]}
 				}, Spacings -> {1, 1}, ItemSize -> {10, 1}, Dividers -> Center
 				]}, Spacer[5]]
 		}], UpdateInterval -> 1, TrackedSymbols -> {}
@@ -67,5 +67,16 @@ hgm = Histogram[Last /@ aps, Automatic, "Probability", PerformanceGoal -> "Quali
 	ChartElementFunction -> ChartElementDataFunction["SegmentScaleRectangle", "Segments" -> 10, "ColorScheme" -> "BrownCyanTones"]
 ]
 Export["aps.png", hgm, Background -> None, ImageSize -> 640]
-mv = First /@ Select[aps, !(1 / E < Last@# < E)&]
+mv = First /@ Select[aps, !(1 / E < Last@# < E)&];
 CopyFile @@@ Transpose[{mv, StringReplace[#, "\\PNG\\" -> "\\Remove\\"]& /@ mv}]
+
+
+(* ::Text:: *)
+(*数据集大小*)
+files = Join[FileNames["*", "D:\\MyDrivers\\PNG\\"], FileNames["*", "D:\\MyDrivers\\Remove\\"]];
+size = First@UnitConvert[#, "Kilobytes"]& /@ (FileSize /@ files);
+hgm = Histogram[size, {0, 7000, 200}, "Probability", ChartStyle -> "Pastel", PerformanceGoal -> "Quality"]
+Export["size.png", hgm, Background -> None, ImageSize -> 640]
+
+
+
