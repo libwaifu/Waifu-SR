@@ -31,6 +31,8 @@ VDSR::usage = "";
 WaifuVDSR::usage = "";
 VGGSR::usage = "";
 WaifuVGGSR::usage = "";
+SESR::usage = "";
+WaifuSESR::usage = "";
 (* ::Section:: *)
 (*程序包正体*)
 (* ::Subsection::Closed:: *)
@@ -84,7 +86,7 @@ WaifuVDSR[img_, zoom_ : 2, device_ : "GPU"] := Block[
 ];
 (* ::Subsubsection::Closed:: *)
 (*VGGSR*)
-VGGSR = Import@FileNameJoin[{$models, "Waifu-VGGSR.WMLF"}]
+VGGSR = Import@FileNameJoin[{$models, "Waifu-VGGSR.WMLF"}];
 WaifuVGGSR[img_, device_ : "GPU"] := Module[
 	{covImg, covNet, x, y},
 	{x, y} = ImageDimensions[img];
@@ -92,6 +94,21 @@ WaifuVGGSR[img_, device_ : "GPU"] := Module[
 	covNet = NetReplacePart[VGGSR, "Input" -> NetEncoder[{"Image", ImageDimensions@covImg}]];
 	covNet[covImg, TargetDevice -> device]
 ];
+
+(* ::Subsubsection::Closed:: *)
+(*SESR*)
+SESR = Import@FileNameJoin[{$models, "Waifu-SESR.WMLF"}];
+WaifuSESR[img_, device_ : "GPU"] := Block[
+	{upsample, ycbcr, netResize, adjust},
+	upsample = ImageResize[img, Scaled[2], Resampling -> "Cubic"];
+	ycbcr = ImageApply[rgbMatrix.# + {0.063, 0.502, 0.502}&, upsample];
+	netResize = NetReplacePart[SESR, {
+		"Input" -> NetEncoder[{"Image", ImageDimensions@img, ColorSpace -> "Grayscale"}]
+	}];
+	adjust = ColorCombine[{Image@netResize[#1, TargetDevice -> device], #2, #3}]&;
+	ImageApply[rgbMatrixT.# + {-0.874, 0.532, -1.086}&, adjust @@ ColorSeparate[ycbcr]]
+];
+
 (* ::Subsection::Closed:: *)
 (*附加设置*)
 End[];
