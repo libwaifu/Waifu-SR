@@ -9,7 +9,7 @@ NetChain[
 		ConstantArray[{ConvolutionLayer[64, {3, 3}, "PaddingSize" -> 1], Ramp}, 19],
 		{ConvolutionLayer[1, {3, 3}, "PaddingSize" -> 1], TransposeLayer[{1<->3, 1<->2}]}
 	],
-	"Input" -> {1, 255, 255}
+	"Input" -> {1, 640, 360}
 ] // NetInitialize
 ```
 

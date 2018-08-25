@@ -7,8 +7,7 @@ net = NetChain[{
 	ConvolutionLayer[32, {3, 3}], ElementwiseLayer[Ramp],
 	ConvolutionLayer[3, {3, 3}]
 },
-	"Input" -> {3, Automatic, Automatic},
-	"Output" -> NetDecoder["Image"]
+	"Input" -> {3, 640, 360}
 ] // NetInitialize
 ```
 
@@ -30,8 +29,7 @@ chain = NetChain[{
 	ConvolutionLayer[128, {3, 3}], leakyReLU[0.1],
 	ConvolutionLayer[3, {3, 3}]
 },
-	"Input" -> NetEncoder[{"Image", 32}],
-	"Output" -> NetDecoder["Image"]
+	"Input" -> {3, 640, 360}
 ] // NetInitialize
 ```
 

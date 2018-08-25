@@ -10,7 +10,7 @@ GetConvolution[i_] := {
 };
 mainCNN = NetChain[{
 	Table[GetConvolution[ToString@i], {i, 0, 10}],
-	"decon_11" -> DeconvolutionLayer[64, 4, "Biases" -> None, "PaddingSize" -> {1, 1}],
+	"decon_11" -> DeconvolutionLayer[64, 4, "Biases" -> None, "PaddingSize" -> 1, "Stride" -> 2],
 	"leaky_11" -> leakyReLU[0.2],
 	"convo_12" -> ConvolutionLayer[1, 3, "Biases" -> None, "PaddingSize" -> {1, 1}]
 } // Flatten];
@@ -24,7 +24,7 @@ LapSRN = NetGraph[{
 	NetPort["Input"] -> "res",
 	{"main", "res"} -> "add" -> "trans"
 },
-	"Input" -> NetEncoder[{"Image", {255, 255}, ColorSpace -> "Grayscale"}]
+	"Input" -> {1, 640, 360}
 ] // NetInitialize
 ```
 

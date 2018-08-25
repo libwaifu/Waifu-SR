@@ -2,6 +2,8 @@
 
 https://github.com/YapengTian/Single-Image-Super-Resolution
 
+# SR on CNN
+
 ## SRCNN
 
 ## VGGSR
@@ -17,11 +19,13 @@ https://github.com/YapengTian/Single-Image-Super-Resolution
 
 ## VDSR
 
+# SR on GAN
+
 ## SRGan
 
 ## ProSRGan
 
 
-# Video SR
+# SR on Video
 
 ## VESPCN

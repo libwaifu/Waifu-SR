@@ -25,6 +25,7 @@ BeginPackage["Waifu`"];
 (*函数说明*)
 LapSRN::usage = "";
 WaifuLapSRN::usage = "";
+WaifuLapSRN2::usage = "";
 RED30::usage = "";
 WaifuRED30::usage = "";
 VDSR::usage = "";
@@ -48,15 +49,20 @@ rgbMatrixT = {{1.164, 0., 1.596}, {1.164, -0.392, -0.813}, {1.164, 2.017, 0.}};
 (* ::Subsubsection::Closed:: *)
 (*LapSRN*)
 LapSRN = Import@FileNameJoin[{$models, "Waifu-LapSRN.WMLF"}];
+LapSRN2 = Import@FileNameJoin[{$models, "Waifu-LapSRN2.WMLF"}];
 WaifuLapSRN[img_, zoom_ : 2, device_ : "GPU"] := Block[
-	{upsample, ycbcr, netResize, adjust},
-	upsample = ImageResize[img, Scaled[zoom], Resampling -> "Cubic"];
-	ycbcr = ImageApply[rgbMatrix.# + {0.063, 0.502, 0.502}&, upsample];
-	netResize = NetReplacePart[LapSRN, {
-		"Input" -> NetEncoder[{"Image", ImageDimensions@upsample - 1, ColorSpace -> "Grayscale"}]
-	}];
-	adjust = ColorCombine[{#1 + Image@netResize[#1, TargetDevice -> device], #2, #3}]&;
-	ImageApply[rgbMatrixT.# + {-0.874, 0.532, -1.086}&, adjust @@ ColorSeparate[ycbcr]]
+	{render},
+	render[channel_] := Image[NetReplacePart[LapSRN, {
+		"Input" -> NetEncoder[{"Image", ImageDimensions@img, ColorSpace -> "Grayscale"}]
+	}][channel, TargetDevice -> device]];
+	ColorCombine[render /@ ColorSeparate[img]]
+];
+WaifuLapSRN2[img_, zoom_ : 2, device_ : "GPU"] := Block[
+	{render},
+	render[channel_] := Image[NetReplacePart[LapSRN2, {
+		"Input" -> NetEncoder[{"Image", ImageDimensions@img, ColorSpace -> "Grayscale"}]
+	}][channel, TargetDevice -> device]];
+	ColorCombine[render /@ ColorSeparate[img]]
 ];
 (* ::Subsubsection::Closed:: *)
 (*RED30*)
