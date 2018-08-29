@@ -51,12 +51,6 @@ Updated$BenchmarkLoader = "2018-08-21";
 (*主体代码*)
 (* ::Subsubsection::Closed:: *)
 (*$WaifuSR*)
-$WaifuSRScore = {
-	<|
-		"Name" -> "Nearest"
-	
-	|>
-};
 WaifuNearset = ImageResize[#, {512, 512}, Resampling -> "Nearest"] &;
 WaifuLinear = ImageResize[#, {512, 512}, Resampling -> "Linear"] &;
 WaifuCubic = ImageResize[#, {512, 512}, Resampling -> "Cubic"] &;
