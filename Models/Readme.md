@@ -4,10 +4,10 @@
 
 Name|size|paras|layers|nodes|speed|FLOPS|
 ----|----|-----|------|-----|-----|-----|
-Nearest|None|0 order|None|None|1.141 ms|136.9 M
-Linear|None|1 order|None|None|4.184 ms|486.1 M
-Cubic|None|3 order|None|None|10.83 ms|1.380 G
-o-MOMS|None|7 order|None|None|9.975 ms|1.292 G
+Nearest|None|None|None|None|1.141 ms|136.9 M
+Linear|None|None|None|None|4.184 ms|486.1 M
+Cubic|None|None|None|None|10.83 ms|1.380 G
+o-MOMS|None|None|None|None|9.975 ms|1.292 G
 VGGSR|2.11 MB|552.5 K|13|-|97.57 ms|63.20 G
 VDSR|2.54 MB|665.9 K|40|82|344.1 ms|222.9 G
 SESR|1.19 MB|312.5 K|65|-|358.9 ms|232.5 G
