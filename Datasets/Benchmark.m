@@ -23,6 +23,10 @@
 BeginPackage["Waifu`"];
 (* ::Section:: *)
 (*函数说明*)
+WaifuNearset::usage = "";
+WaifuLinear::usage = "";
+WaifuCubic::usage = "";
+WaifuOMOMS::usage = "";
 LapSRN::usage = "";
 WaifuLapSRN::usage = "";
 WaifuLapSRN2::usage = "";
@@ -46,17 +50,17 @@ Updated$BenchmarkLoader = "2018-08-21";
 (* ::Subsection:: *)
 (*主体代码*)
 (* ::Subsubsection::Closed:: *)
-(*LapSRN*)
+(*$WaifuSR*)
 $WaifuSRScore = {
 	<|
 		"Name" -> "Nearest"
 	
 	|>
 };
-
-
-
-
+WaifuNearset = ImageResize[#, {512, 512}, Resampling -> "Nearest"] &;
+WaifuLinear = ImageResize[#, {512, 512}, Resampling -> "Linear"] &;
+WaifuCubic = ImageResize[#, {512, 512}, Resampling -> "Cubic"] &;
+WaifuOMOMS = ImageResize[#, {512, 512}, Resampling -> {"OMOMS", 7}] &;
 $models = FileNameJoin[{DirectoryName[$InputFileName, 2], "Models"}];
 rgbMatrix = {{0.257, 0.504, 0.098}, {-0.148, -0.291, 0.439}, {0.439, -0.368, -0.071}};
 rgbMatrixT = {{1.164, 0., 1.596}, {1.164, -0.392, -0.813}, {1.164, 2.017, 0.}};
