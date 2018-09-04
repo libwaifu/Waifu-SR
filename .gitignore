@@ -16,6 +16,7 @@ docs/.vuepress/public/
 
 # 模型文件
 *.7z
+*.mx
 *.rar
 *.zip
 *.wxf
