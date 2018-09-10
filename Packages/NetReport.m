@@ -22,7 +22,7 @@
 (*这里应该填这个函数的介绍*)
 (* ::Section:: *)
 (*函数说明*)
-jsonNetPlot::usage = "";
+NetModelPlot::usage = "";
 GetReport::usage = "";
 (* ::Section:: *)
 (*程序包正体*)
@@ -36,7 +36,8 @@ Version$NetReport = "V1.0";
 Updated$NetReport = "2018-09-10";
 (* ::Subsubsection:: *)
 (*功能块 1*)
-Options[jsonNetPlot] = {
+Options[NetModelPlot] = {
+	Magnify->1.5,
 	"ShowTensors" -> True,
 	"VertexLabels" -> Placed["ID", Above],
 	"VertexOrder" -> Automatic,
@@ -46,12 +47,12 @@ Options[jsonNetPlot] = {
 	Rotate -> False,
 	GraphLayout -> "LayeredDigraphDrawing"
 };
-jsonNetPlot[file_File, OptionsPattern[]] := Block[
+NetModelPlot[file_File, OptionsPattern[]] := Block[
 	{
 		showTensors, vertexLabels, vertexOrder, edgeBundling, outputTensors, plot,
-		internalDimensions, nodes, argnodes, heads, MXNetLink`Visualization`PackagePrivate`$oldids, nameStrings, typeStrings,
+		internalDimensions, nodes, argNodes, heads, $oldIds, nameStrings, typeStrings,
 		edges, nodeOps, longRange, opTypes, opNames, nullType, blank, maxIndex,
-		name, nodeDims, edgeTooltips, nops, opStyles, opSizes, vertexTypeData, labels, infoGrids, nnodes
+		name, nodeDims, edgeTooltips, nops, opStyles, opSizes, vertexTypeData, labels, infoGrids, nNodes
 	},
 	{
 		showTensors, vertexLabels, vertexOrder, edgeBundling, outputTensors, internalDimensions
@@ -59,15 +60,15 @@ jsonNetPlot[file_File, OptionsPattern[]] := Block[
 		"ShowTensors", "VertexLabels", "VertexOrder", "EdgeBundling", "OutputTensors", "InternalDimensions"
 	};
 	expr = MXNetLink`MXSymbolToJSON@MXNetLink`MXSymbolFromJSON@file;
-	{nodes, argnodes, heads} = Lookup[expr, {"nodes", "arg_nodes", "heads"}, GeneralUtilities`Panic[]];
-	MXNetLink`Visualization`PackagePrivate`$oldids = If[ListQ[vertexOrder],
+	{nodes, argNodes, heads} = Lookup[expr, {"nodes", "arg_nodes", "heads"}, GeneralUtilities`Panic[]];
+	$oldIds = If[ListQ[vertexOrder],
 		Map[Function[GeneralUtilities`IndexOf[vertexOrder, #name] - 1], nodes],
 		Range[Length[nodes]] - 1
 	];
 	nodes = Map[Append[#, "inputs1" -> (Part[#inputs, All, 1] + 1)]&, nodes];
 	nameStrings = Map[MXNetLink`Visualization`PackagePrivate`toVertexLabelString[#name]&, nodes];
 	typeStrings = Map[MXNetLink`Visualization`PackagePrivate`toVertexTypeString[#op]&, nodes];
-	AddTo[argnodes, 1];
+	AddTo[argNodes, 1];
 	AddTo[heads, 1];
 	edges = Apply[Join,
 		MapIndexed[
@@ -76,7 +77,7 @@ jsonNetPlot[file_File, OptionsPattern[]] := Block[
 				Nothing,
 				If[showTensors,
 					Thread @ Prepend[#2, #inputs1],
-					Thread @ Prepend[#2, Complement[#inputs1, argnodes]]
+					Thread @ Prepend[#2, Complement[#inputs1, argNodes]]
 				]
 			]&,
 			nodes
@@ -95,10 +96,10 @@ jsonNetPlot[file_File, OptionsPattern[]] := Block[
 	];
 	If[showTensors && ListQ[outputTensors],
 		opTypes = Join[opTypes, ConstantArray[nullType, Length @ outputTensors]];
-		argnodes = Join[argnodes, Range[Length[outputTensors]] + Max[edges]];
+		argNodes = Join[argNodes, Range[Length[outputTensors]] + Max[edges]];
 		nameStrings = Join[nameStrings, outputTensors];
 		blank = ConstantArray["", Length @ outputTensors];
-		MXNetLink`Visualization`PackagePrivate`$oldids = Join[MXNetLink`Visualization`PackagePrivate`$oldids, blank];
+		$oldIds = Join[$oldIds, blank];
 		typeStrings = Join[typeStrings, blank];
 		nodes = Join[nodes, blank];
 		maxIndex = Max @ edges;
@@ -129,20 +130,20 @@ jsonNetPlot[file_File, OptionsPattern[]] := Block[
 		vertexTypeData = Join[vertexTypeData, <|"VertexSizes" -> opSizes|>]
 	];
 	labels = ReplaceAll[vertexLabels,
-		{"Name" :> nameStrings, "ID" :> MXNetLink`Visualization`PackagePrivate`$oldids, "Type" :> typeStrings}
+		{"Name" :> nameStrings, "ID" :> $oldIds, "Type" :> typeStrings}
 	];
 	infoGrids = Map[MXNetLink`Visualization`PackagePrivate`nodeInfoGrid, nodes];
-	nnodes = Length @ nodes;
-	plot = GeneralUtilities`LayerPlot[edges,
-		"VertexLabels" -> labels, "HiddenVertices" -> If[showTensors, None, argnodes],
+	nNodes = Length @ nodes;
+	plot = LayerPlot[edges,
+		"VertexLabels" -> labels, "HiddenVertices" -> If[showTensors, None, argNodes],
 		"VertexTypeData" -> vertexTypeData, "VertexTypeLabels" -> opNames, "MaximumImageSize" -> None,
 		"VertexSizes" -> 4, "EdgeTooltips" -> edgeTooltips,
 		"BaseLabelStyle" -> {FontSize -> 7}, "LayoutMethod" -> OptionValue[GraphLayout],
 		"DuplicateInputVertices" -> True, If[showTensors, "VertexTypes" -> opTypes, "VertexStyles" -> opTypes],
 		"LongRangeEdges" -> longRange, "Rotated" -> OptionValue[Rotate], "ArrowShape" -> "Chevron", "LegendLabelStyle" -> 8
 	];
-	Magnify[plot, 1.5]
-]
+	Magnify[plot, OptionValue[Magnify]]
+];
 
 
 
@@ -152,9 +153,9 @@ jsonNetPlot[file_File, OptionsPattern[]] := Block[
 
 GetReport[results_] := Block[
 	{
-		gpu = GeneralUtilities`ToAssociations[SystemInformation["Devices"]]["GraphicsDevices", "OpenGL", "OnScreen"],
-		gpu1 = GeneralUtilities`ToAssociations@OpenCLInformation[1, 1],
-		gpu2 = GeneralUtilities`ToAssociations@OpenCLInformation[1, 2]
+		gpu = ToAssociations[SystemInformation["Devices"]]["GraphicsDevices", "OpenGL", "OnScreen"],
+		gpu1 = ToAssociations@OpenCLInformation[1, 1],
+		gpu2 = ToAssociations@OpenCLInformation[1, 2]
 	},
 	<|
 		"Quality" -> (<|# -> results[#]|>& /@ {
@@ -182,7 +183,7 @@ GetReport[results_] := Block[
 			"VersionNumber"
 		}),
 		"Platform" -> <|
-			"Mathematica" -> GeneralUtilities`ToAssociations[SystemInformation["Kernel"]]["Version"],
+			"Mathematica" -> ToAssociations[SystemInformation["Kernel"]]["Version"],
 			"GPU" -> gpu["Renderer"],
 			"CUDA" -> gpu["Version"]
 		|>
@@ -195,5 +196,5 @@ GetReport[results_] := Block[
 SetAttributes[
 	{ },
 	{Protected, ReadProtected}
-]
+];
 End[]

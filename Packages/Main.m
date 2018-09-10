@@ -1,12 +1,15 @@
 WaifuSR::usage = "";
 Begin["`Private`"];
-
-
-WaifuSR = "on Hold";
-
-
-(* ::Subsection::Closed:: *)
-(*附加设置*)
+PackageLoadPacletDependency["NeuralNetworks`"];
+PackageLoadPacletDependency["MXNetLink`"];
+PackageExtendContextPath[
+	{
+		"Developer`",
+		"MXNetLink`",
+		"NeuralNetworks`",
+		"GeneralUtilities`"
+	}
+];
 SetAttributes[
 	{ },
 	{Protected, ReadProtected}
