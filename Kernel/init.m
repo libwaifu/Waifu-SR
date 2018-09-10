@@ -1,1 +1,3 @@
-Get["WaifuSR`WaifuSR`"]; 
+If[!TrueQ[WaifuSR`PackageScope`Private`$LoadCompleted],
+	<< WaifuSR`WaifuSRLoader`
+]

@@ -18,9 +18,6 @@
 (*3.不得使用其原始商标。*)
 (*4.如果修改了源代码，包含一份代码修改说明。*)
 (**)
-(* ::Text:: *)
-(*这里应该填这个函数的介绍*)
-BeginPackage["Waifu`"];
 (* ::Section:: *)
 (*函数说明*)
 WaifuNearset::usage = "";
@@ -142,9 +139,8 @@ WaifuSESR[img_, device_ : "GPU"] := Block[
 
 (* ::Subsection::Closed:: *)
 (*附加设置*)
-End[];
 SetAttributes[
 	{ },
 	{Protected, ReadProtected}
 ];
-EndPackage[]
+End[]

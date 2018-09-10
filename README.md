@@ -8,3 +8,10 @@
 
 Image Super-Resolution for Anime-style art
 
+## Warning
+
+Here is the development branch of the project.
+
+If you have any problems when using, go to https://github.com/Moe-Net/Waifu-X.
+
+
