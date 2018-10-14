@@ -1,0 +1,16 @@
+# idea 配置文件
+*.iml
+.idea/*
+
+# 原LFS文件
+*.csv
+*.wmlf
+
+# 模型文件
+*.7z
+*.mx
+*.rar
+*.zip
+*.wxf
+*.wlnet
+*.onnx
